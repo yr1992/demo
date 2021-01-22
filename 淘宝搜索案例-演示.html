@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <!-- 导入页面的基本样式 -->
+    <link rel="stylesheet" href="./css/search.css" />
+    <!-- 导入 jQuery -->
+    <script src="./lib/jquery.js"></script>
+    <style>
+    #sousuo,
+    #sousuo li {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #sousuo li {
+        height: 25px;
+        line-height: 25px;
+        padding-left: 5px;
+        color: gray;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <img src="./images/taobao_logo.png" alt="" class="logo" />
+        <div class="box">
+            <!-- tab 栏 -->
+            <div class="tabs">
+                <div class="tab-active">宝贝</div>
+                <div>店铺</div>
+            </div>
+            <!-- 搜索区域（搜索框和搜索按钮） -->
+            <div class="search-box">
+                <input type="text" class="ipt" placeholder="请输入要搜索的内容" />
+                <button class="btnSearch">
+                    搜索
+                </button>
+            </div>
+            <!-- 搜索建议区 -->
+            <ul id="sousuo">
+                <!-- <li>demo</li> -->
+            </ul>
+        </div>
+    </div>
+    <script>
+    // 注册输入框的keyup事件，当键盘弹起的时候，完成搜索
+    $('.ipt').keyup(function() {
+        // 判断输入框的值是否为空
+        let val = $(this).val().trim();
+        if (val === '') {
+            return;
+        }
+
+        // 发送JSONP请求，获取搜索建议
+        $.ajax({
+            url: 'https://suggest.taobao.com/sug',
+            data: { q: val },
+            success: function(res) {
+                // console.log(res);
+                let str = '';
+                res.result.forEach(item => {
+                    str += '<li>' + item[0] + '</li>';
+                });
+                // 把拼接好的li，放到ul中
+                $('#sousuo').html(str);
+            },
+            dataType: 'jsonp' // 必须指定的
+        });
+    });
+    </script>
+</body>
+
+</html>
